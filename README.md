@@ -23,3 +23,4 @@ Notes:
 
 Deadlines:
 - Meet April 23rd at 12pm to test + debug
+- Optional meeting April 17th at 6pm
