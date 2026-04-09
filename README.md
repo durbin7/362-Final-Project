@@ -19,6 +19,7 @@ Assignments:
 
 Notes:
 - Make gpio pins variables
+- 5 buttons and LEDs
 
 Deadlines:
 - Meet April 23rd at 12pm to test + debug
