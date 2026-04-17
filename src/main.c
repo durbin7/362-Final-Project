@@ -1,10 +1,18 @@
 #include <stdlib.h>
 #include <stdbool.h>
+#include <functions.h>
 
 int score = 0;
 int time_left = 30;
 int interval_between_moles = 500; //this is in ms
 int highscore = 0;
+
+int active_lit;
+
+extern int moles[];
+extern int lights[];
+extern int active_mole;
+extern bool hit;
 
 typedef enum {
     IDLE,
@@ -13,6 +21,7 @@ typedef enum {
 } GameState;
 
 GameState game_status = IDLE;
+
 /***
  * IGNORE NOTES
  * CONFIGURE
@@ -53,6 +62,17 @@ GameState game_status = IDLE;
  * 
  */
 
+int spawn_mole() {
+    int random = rand() % 5;
+
+    active_mole = moles[random];
+    active_lit = lights[random];
+
+    gpio_put(active_lit, 1); //turn on
+
+    return active_mole;
+}
+
 
 
 int main() {
@@ -62,26 +82,43 @@ int main() {
     //init_pwm();
     //... 
     //enable_gpio_interrupts()
-    bool start = false;
+    init_gpio();
 
+    bool start = false;
+    game_status = IDLE;
+
+    while (1) {
+
+    
     switch(game_status) {
         case IDLE:
             if (start == true) { //inside will 
                 game_status = PLAYING;
+                time_left = 30;
+                score = 0;
+
                 start = true;
+
+                spawn_mole;
             } 
 
         case PLAYING:
             //spawn_mole()
 
-            if(time_left <= 0) {
-                game_status = IDLE;
-                start = false;
+            if(hit) {
+                if (active_mole == active_lit) {
+                    score++;
+                    //probably call update spi
+                }
+                else {
+                    //call the wrong sound
+                }
+
+                gpio_put(active_lit, 0);
             }
-
             
-    }
-
+        }
+    }   
 
 
 
