@@ -20,6 +20,7 @@ Assignments:
 Notes:
 - Make gpio pins variables
 - 5 buttons and LEDs
+- Everyone needs to work in separate files to prevent overwriting when pushing to same file
 
 Deadlines:
 - Meet April 23rd at 12pm to test + debug
