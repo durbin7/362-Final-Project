@@ -1,3 +1,4 @@
-//good luck on teh functions
+//good luck on teh 
+i am having a great day
+yasss
 
-// hi -Lauren
