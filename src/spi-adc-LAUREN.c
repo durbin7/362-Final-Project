@@ -12,12 +12,13 @@ Function initializations:
 */
 // For main to call:
 void init_disp_spi(); // Initializes display, score, and time. Call at beginning.
+void display_welcome(); // Call at beginning.
 void display_score_isr(); // Updates score on display. Call when first start game and when score changes.
+void init_display_timer(); // Starts timer. Call when first start game.
 void display_time_isr(); // Updates time on display. Call when first start game.
 void display_game_over(); // Call if press incorrect or not in time
 // Helper functions:
 void display_game_over();
-void init_display_timer();
 void cd_init();
 void cd_display1(const char *str);
 void cd_display2(const char *str);
@@ -30,6 +31,7 @@ const int SPI_DISP_CSn = 25;
 const int SPI_DISP_TX = 27;
 int score; // already in
 int time_left; // already in
+int max_score; // need to pull from SD card
 
 /*
 ####################
@@ -138,6 +140,14 @@ void init_disp_spi()
 
     init_display_timer();
     cd_init();
+}
+
+void display_welcome()
+{
+    const char *str1 = "Push button to start";
+    cd_display1(str1);
+    const char *str2 = "High Score: %d", max_score;
+    cd_display2(str2);
 }
 
 void display_time_isr()

@@ -20,6 +20,9 @@ void init_wavetable(void);
 void set_freq(int chan, float f);
 extern KeyEvents kev;
 void drum_machine();
+
+1. 
+
 void init_pwm_static () //implementing static duty cycle pwm signal
 {
 
@@ -72,7 +75,7 @@ void play_sound ()
     //find the wrap for the frequency we want
     //f = 150mhz / (wrap+1) so wrap = (150mhz/freq)
     //default clk is 125mhz
-    uin32_t clk = 150000000;
+    uint32_t clk = 150000000;
     uint32_t wrap = (clk / freq) -1;
     //writing a specific value to the appropriate PWM interrupt register
     uint slice_num = pwm_gpio_to_slice_num(37);
@@ -81,35 +84,6 @@ void play_sound ()
 
 }
 
-void init_pwm_irq() {
-    // fill in
-    //enable intterrupts for pwm slice for gp37. first pwm wrap0
-    uint slice_num = pwm_gpio_to_slice_num(37);
-    uint slice_num1 = pwm_gpio_to_slice_num(38);
-    uint slice_num2 = pwm_gpio_to_slice_num(39);
-    pwm_set_irq0_enabled(slice_num, true);
-      //hw_write_masked(&pwm_hw->slice[slice_num].csr, bool_to_bit(enabled) << PWM_CH0_CSR_EN_LSB, PWM_CH0_CSR_EN_BITS);
-    //set exclusive handler
-    //Enable PWM instance interrupt via PWM_IRQ_WRAP_0.
-//Used to enable a single PWM instance interrupt.
-    //when slice wraps to 0 set pwm as
-    // pwm_get_counter
-    // pwm_hw->slice[slice_num].ctr ;
-    irq_set_exclusive_handler(PWM_IRQ_WRAP_0,pwm_breathing); //interrupt number,handler
-    // pwm_set_irq_mask_enabled(slice_num, true); //enable interrupts
-   //obtian periodin current period
-   
-   irq_set_enabled(PWM_IRQ_WRAP_0, true);
-   int current_period = pwm_hw->slice[slice_num].top; // set curent period to top?
-   duty_cycle = 100;
-   dir =1;
-   //set duty cycles of 3 rgb led pwm current period. 
-   pwm_set_chan_level(slice_num,1,current_period);
-   pwm_set_chan_level(slice_num1,0,current_period);
-   pwm_set_chan_level(slice_num2,1,current_period);
-   //pwm_Set_Gpio_level
-
-}
 //Ab is bad  415.3 Hz
 //B is good 494 hz
 
@@ -145,19 +119,21 @@ void init_pwm_audio() {
   //config as out 36
      gpio_set_function(36, GPIO_FUNC_PWM); //set pin 36 to pwm output
      uint slice_num0 = pwm_gpio_to_slice_num(36); 
-      pwm_set_clkdiv(slice_num0, 150.f); //set pwm slice clk divider to be 150 so 1MHz clock
+    pwm_set_clkdiv(slice_num0, 150.f); //set pwm slice clk divider to be 150 so 1MHz clock
 
-//    int per = pwm_hw->slice[slice_num0].top;
-//    per = per/RATE - 1;
-pwm_set_chan_level(slice_num0,0,0);
-   pwm_set_wrap(slice_num0,1000000/RATE -1); //1079 //results in 20khz frequency
+    pwm_set_chan_level(slice_num0,0,0);
+    pwm_set_wrap(slice_num0,1000000/RATE -1); //1079 //results in 20khz frequency
     duty_cycle =0;
     init_wavetable();
-     irq_set_enabled(PWM_IRQ_WRAP_0, true);
-      irq_set_exclusive_handler(PWM_IRQ_WRAP_0,pwm_audio_handler);
 
-       pwm_set_irq0_enabled(slice_num0, true);
-           pwm_set_enabled(slice_num0, true); //enable slice
+
+    irq_set_enabled(PWM_IRQ_WRAP_0, true);
+    irq_set_exclusive_handler(PWM_IRQ_WRAP_0,pwm_audio_handler);
+
+    pwm_set_irq0_enabled(slice_num0, true);
+
+    //start pwm
+    pwm_set_enabled(slice_num0, true); //enable slice
   
 }
 //in main, call init_pwm_audio and call 'set_freq' with float value ___ to get freq of ___
