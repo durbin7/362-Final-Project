@@ -101,6 +101,7 @@ int main() {
 
                 spawn_mole;
             } 
+            break; 
 
         case PLAYING:
             //spawn_mole()
@@ -117,11 +118,24 @@ int main() {
                 gpio_put(active_lit, 0);
             }
             
+            if (time_left <= 0) {
+                game_status = GAME_OVER;
+            }
+
+        case GAME_OVER:
+            if (score > highscore) {
+                highscore = score;
+            }
+
+            gpio_put(active_lit, 0);
+
+            start = false;
+            game_status = IDLE;
+
+            break;
         }
-    }   
 
-
-
+    }
 }
 
 
