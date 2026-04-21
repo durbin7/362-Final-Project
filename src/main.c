@@ -14,12 +14,24 @@ extern int lights[];
 extern int active_mole;
 extern bool hit;
 
+const int SPI_DISP_SCK = 26; 
+const int SPI_DISP_CSn = 25;
+const int SPI_DISP_TX = 27;
+const int ADC_CH5 = 45; 
+
 typedef enum {
     IDLE,
     PLAYING,
     GAME_OVER
 } GameState;
 
+typedef enum {
+    SLOW,
+    MEDIUM,
+    FAST
+} GameSpeed;
+
+GameSpeed game_speed = SLOW;
 GameState game_status = IDLE;
 
 /***

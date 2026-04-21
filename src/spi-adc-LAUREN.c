@@ -2,48 +2,50 @@
 // - SPI with LCD display to show leaderboard stats and update the game score
 // - Lauren: SPI + LCD for stats + game score, ADC with potentiometer
 
-#include "pico/stdlib.h"
-#include "hardware/spi.h"
-#include "hardware/gpio.h"
-#include "hardware/timer.h"
-#include "hardware/adc.h"
+#include "functions.h"
 
-/*
-Function initializations:
-*/
+// #include "pico/stdlib.h"
+// #include "hardware/spi.h"
+// #include "hardware/gpio.h"
+// #include "hardware/timer.h"
+// #include "hardware/adc.h"
 
-// For main to call:
-void init_disp_spi(); // Initializes display, score, and time. Call at beginning.
-void init_adc(); // Initializes ADC. Call at beginning.
-void read_adc(); // Gets game speed from potentiometer. Call when first start game.
-void display_welcome(); // Call at beginning.
-void display_score_isr(); // Updates score on display. Call when first start game and when score changes.
-void init_display_timer(); // Starts timer. Call when first start game.
-void display_time_isr(); // Updates time on display. Call when first start game.
-void display_game_over(); // Call if press incorrect or not in time
+// /*
+// Function initializations:
+// */
 
-// Helper functions:
-void display_game_over();
-void cd_init();
-void cd_display1(const char *str);
-void cd_display2(const char *str);
-void send_spi_cmd(spi_inst_t* spi, uint16_t value);
-void send_spi_data(spi_inst_t* spi, uint16_t value);
+// // For main to call:
+// void init_disp_spi(); // Initializes display, score, and time. Call at beginning.
+// void init_adc(); // Initializes ADC. Call at beginning.
+// void read_adc(); // Gets game speed from potentiometer. Call when first start game.
+// void display_welcome(); // Call at beginning.
+// void display_score_isr(); // Updates score on display. Call when first start game and when score changes.
+// void init_display_timer(); // Starts timer. Call when first start game.
+// void display_time_isr(); // Updates time on display. Call when first start game.
+// void display_game_over(); // Call if press incorrect or not in time
 
-// Global variables - PUT IN MAIN LATER
-const int SPI_DISP_SCK = 26; 
-const int SPI_DISP_CSn = 25;
-const int SPI_DISP_TX = 27;
-const int ADC_CH5 = 45; 
-int score; // already in
-int time_left; // already in
-int max_score; // need to pull from SD card, Aditya
-typedef enum {
-    SLOW,
-    MEDIUM,
-    FAST
-} GameSpeed;
-GameSpeed game_speed = SLOW;
+// // Helper functions:
+// void display_game_over();
+// void cd_init();
+// void cd_display1(const char *str);
+// void cd_display2(const char *str);
+// void send_spi_cmd(spi_inst_t* spi, uint16_t value);
+// void send_spi_data(spi_inst_t* spi, uint16_t value);
+
+// // Global variables - PUT IN MAIN LATER
+// const int SPI_DISP_SCK = 26; 
+// const int SPI_DISP_CSn = 25;
+// const int SPI_DISP_TX = 27;
+// const int ADC_CH5 = 45; 
+// int score; // already in
+// int time_left; // already in
+// int highscore; // already in
+// typedef enum {
+//     SLOW,
+//     MEDIUM,
+//     FAST
+// } GameSpeed;
+// GameSpeed game_speed = SLOW;
 
 /*
 ####################
@@ -210,7 +212,7 @@ void display_welcome()
 {
     const char *str1 = "Push button to start";
     cd_display1(str1);
-    const char *str2 = "High Score: %d", max_score;
+    const char *str2 = "High Score: %d", highscore;
     cd_display2(str2);
 }
 
