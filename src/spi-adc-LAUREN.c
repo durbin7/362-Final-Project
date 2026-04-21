@@ -6,17 +6,22 @@
 #include "hardware/spi.h"
 #include "hardware/gpio.h"
 #include "hardware/timer.h"
+#include "hardware/adc.h"
 
 /*
 Function initializations:
 */
+
 // For main to call:
 void init_disp_spi(); // Initializes display, score, and time. Call at beginning.
+void init_adc(); // Initializes ADC. Call at beginning.
+void read_adc(); // Gets game speed from potentiometer. Call when first start game.
 void display_welcome(); // Call at beginning.
 void display_score_isr(); // Updates score on display. Call when first start game and when score changes.
 void init_display_timer(); // Starts timer. Call when first start game.
 void display_time_isr(); // Updates time on display. Call when first start game.
 void display_game_over(); // Call if press incorrect or not in time
+
 // Helper functions:
 void display_game_over();
 void cd_init();
@@ -29,9 +34,16 @@ void send_spi_data(spi_inst_t* spi, uint16_t value);
 const int SPI_DISP_SCK = 26; 
 const int SPI_DISP_CSn = 25;
 const int SPI_DISP_TX = 27;
+const int ADC_CH5 = 45; 
 int score; // already in
 int time_left; // already in
-int max_score; // need to pull from SD card
+int max_score; // need to pull from SD card, Aditya
+typedef enum {
+    SLOW,
+    MEDIUM,
+    FAST
+} GameSpeed;
+GameSpeed game_speed = SLOW;
 
 /*
 ####################
@@ -39,7 +51,59 @@ int max_score; // need to pull from SD card
 ####################
 */
 
-adc_init()
+void init_adc() 
+{
+    // Reset ADC in case of unknown state
+    // reset_unreset_block_num_wait_blocking(RESET_ADC);
+
+    // Enable ADC
+    adc_hw->cs = ADC_CS_EN_BITS;
+
+    // Check that ADC is ready
+    // while (!(adc_hw->cs & ADC_CS_READY_BITS)) {
+    //     tight_loop_contents();
+    // }
+
+    // Initialize GPIO 45 (ADC channel 5) for use as ADC pin
+    // adc_gpio_init(45);
+    gpio_set_function(ADC_CH5, GPIO_FUNC_NULL);
+    gpio_disable_pulls(ADC_CH5);
+    gpio_set_input_enabled(ADC_CH5, false);
+
+    // Select channel 5 as ADC input
+    // adc_select_input(5);
+    hw_write_masked(&adc_hw->cs, 5 << ADC_CS_AINSEL_LSB, ADC_CS_AINSEL_BITS);
+}
+
+void read_adc() {
+    // Start single-shot conversion
+    hw_set_bits(&adc_hw->cs, ADC_CS_START_ONCE_BITS);
+
+    // Wait for FIFO to have data then get result from FIFO
+    while (!(adc_hw->cs & ADC_CS_READY_BITS))
+        tight_loop_contents();
+
+    uint16_t potent = (uint16_t)adc_hw->result;
+    
+    if(potent < 1365)
+    {
+        game_speed = SLOW;
+    }
+    else if(potent >= 1365 & potent < 2730)
+    {
+        game_speed = MEDIUM;
+    }
+    else
+    {
+        game_speed = FAST;
+    } 
+
+    // Above equivalent:
+    // // Wait for the ADC FIFO to have data
+    // adc_fifo_get_blocking();
+    // // Get ADC result from FIFO 
+    // return adc_fifo_get();
+}
 
 
 /*
@@ -131,7 +195,7 @@ void cd_init() {
 
 void init_disp_spi()
 {
-    for(int pin = SPI_7SEG_CSn; pin <= SPI_7SEG_TX; pin++)
+    for(int pin = SPI_DISP_CSn; pin <= SPI_DISP_TX; pin++)
     {
         gpio_set_function(pin, GPIO_FUNC_SPI); // GPIO_FUNC_SPI = 1
     }
@@ -158,7 +222,7 @@ void display_time_isr()
     // If time_left = 0, update GameState to GAME_OVER
     if(time_left == 0)
     {
-        GameState = GAME_OVER;
+        game_status = GAME_OVER;
         display_game_over();
         return;
     }
