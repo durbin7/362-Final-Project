@@ -248,7 +248,7 @@ void display_game_over()
 void display_score_isr()
 {
     const char *str = "Your score: %d", score;
-    cd_display1(str)
+    cd_display1(str);
 }
 
 // First line display of LCD
