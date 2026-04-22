@@ -28,7 +28,7 @@ void init_gpio() {
 
 void gpio_callback(uint gpio, uint32_t events) { //tell us what button is pressed
     if (events & GPIO_IRQ_EDGE_RISE) {
-        active_mole = gpio;
+        pressed_mole = gpio;
         hit = true;
     }
 }
