@@ -4,6 +4,14 @@
 
 #include "functions.h"
 
+const int SPI_DISP_SCK = 26; 
+const int SPI_DISP_CSn = 25;
+const int SPI_DISP_TX = 27;
+const int ADC_CH5 = 45; 
+int score = 0;
+int time_left = 30;
+int highscore = 0;
+
 // #include "pico/stdlib.h"
 // #include "hardware/spi.h"
 // #include "hardware/gpio.h"

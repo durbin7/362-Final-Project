@@ -2,10 +2,10 @@
 #include <stdbool.h>
 #include <functions.h>
 
-int score = 0;
-int time_left = 30;
+extern score = 0;
+extern time_left = 30;
+extern highscore = 0;
 int interval_between_moles = 500; //this is in ms
-int highscore = 0;
 int indicy_of_mole;
 int active_lit;
 
@@ -15,10 +15,10 @@ extern int active_mole;
 extern bool hit;
 extern int pressed_mole;
 
-const int SPI_DISP_SCK = 26; 
-const int SPI_DISP_CSn = 25;
-const int SPI_DISP_TX = 27;
-const int ADC_CH5 = 45; 
+extern int SPI_DISP_SCK = 26; 
+extern int SPI_DISP_CSn = 25;
+extern int SPI_DISP_TX = 27;
+extern int ADC_CH5 = 45; 
 
 typedef enum {
     IDLE,
