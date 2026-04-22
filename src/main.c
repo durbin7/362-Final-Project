@@ -76,6 +76,7 @@ extern GameState game_status;
  */
 
 void spawn_mole() {
+    srand(time(NULL));
     int random = rand() % 5;
 
     active_mole = moles[random];
@@ -88,8 +89,9 @@ void spawn_mole() {
 }
 
 
+
 int main() {
-    
+    printf("In main()\n");
     //init_gpio();
     //init_timers();
     //init_pwm();
@@ -100,11 +102,16 @@ int main() {
     init_display_timer();
     init_disp_spi();
 
-    bool start = true; //should make this a button
+    bool start = true; //should make this a buttonb                   b                                                                                                                       bbv 
     game_status = IDLE;
-    display_welcome(); //will just have to call here since no idle state
-    while (1) {
 
+    for (int i = 4; i <= 12; i+=2) {
+        gpio_put(i, 0);
+    }
+
+    //display_welcome(); //will just have to call here since no idle state
+    while (1) {
+    //spawn_mole();
     
     switch(game_status) {
         case IDLE:
@@ -116,13 +123,13 @@ int main() {
                 start = true;
                 read_adc();
                 spawn_mole();
-                display_time_isr();
+                //display_time_isr();
             } 
-            display_welcome(); 
+          //  display_welcome(); 
             break; 
 
         case PLAYING:
-            //spawn_mole()
+            
 
             if(hit) {
                 if (active_mole == pressed_mole) {

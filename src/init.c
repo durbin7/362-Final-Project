@@ -21,7 +21,7 @@ void init_gpio() {
     for(int i = 0; i < 5; i++) {
         gpio_init(moles[i]); //set moles as inputs
         gpio_set_dir(moles[i], GPIO_IN);
-        gpio_pull_up(moles[i]);
+        //gpio_pull_up(moles[i]);
 
         gpio_set_irq_enabled_with_callback(
             moles[i], GPIO_IRQ_EDGE_RISE, true, &gpio_callback
