@@ -19,6 +19,7 @@ void gpio_callback(uint gpio, uint32_t events) { //tell us what button is presse
 
             pressed_mole = moles[i];
             hit = true;
+        }
     }
 }
 
