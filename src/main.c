@@ -2,9 +2,9 @@
 #include <stdbool.h>
 #include <functions.h>
 
-extern score = 0;
-extern time_left = 30;
-extern highscore = 0;
+extern score;
+extern time_left;
+extern highscore;
 int interval_between_moles = 500; //this is in ms
 int indicy_of_mole;
 int active_lit;
@@ -15,10 +15,10 @@ extern int active_mole;
 extern bool hit;
 extern int pressed_mole;
 
-extern int SPI_DISP_SCK = 26; 
-extern int SPI_DISP_CSn = 25;
-extern int SPI_DISP_TX = 27;
-extern int ADC_CH5 = 45; 
+extern int SPI_DISP_SCK; 
+extern int SPI_DISP_CSn;
+extern int SPI_DISP_TX;
+extern int ADC_CH5; 
 
 typedef enum {
     IDLE,
@@ -32,8 +32,8 @@ typedef enum {
     FAST
 } GameSpeed;
 
-extern GameSpeed game_speed = SLOW;
-extern GameState game_status = IDLE;
+extern GameSpeed game_speed;
+extern GameState game_status;
 
 /***
  * IGNORE NOTES
