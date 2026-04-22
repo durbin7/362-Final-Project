@@ -9,7 +9,7 @@ int lights[] = {4,6,8,10,12};
 int pressed_mole;
 bool hit;
 
-void gpio_callback(uint gpio, uint32_t events) { //tell us what button is pressed
+void gpio_callback() { //tell us what button is pressed
     for(int i = 0; i < 5; i++)
     {
         if(gpio_get_irq_event_mask(moles[i]) & GPIO_IRQ_EDGE_RISE)
