@@ -32,8 +32,8 @@ typedef enum {
     FAST
 } GameSpeed;
 
-GameSpeed game_speed = SLOW;
-GameState game_status = IDLE;
+extern GameSpeed game_speed = SLOW;
+extern GameState game_status = IDLE;
 
 /***
  * IGNORE NOTES
