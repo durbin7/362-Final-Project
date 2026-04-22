@@ -5,7 +5,7 @@
 
 int moles[] = {1,2,3,4,5};
 int lights[] = {1,2,3,4,5};
-int active_mole = 0;
+int pressed_mole;
 bool hit;
 
 void init_gpio() {

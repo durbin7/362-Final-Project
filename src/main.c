@@ -6,13 +6,19 @@ int score = 0;
 int time_left = 30;
 int interval_between_moles = 500; //this is in ms
 int highscore = 0;
-
+int indicy_of_mole;
 int active_lit;
 
 extern int moles[];
 extern int lights[];
 extern int active_mole;
 extern bool hit;
+extern int pressed_mole;
+
+const int SPI_DISP_SCK = 26; 
+const int SPI_DISP_CSn = 25;
+const int SPI_DISP_TX = 27;
+const int ADC_CH5 = 45; 
 
 typedef enum {
     IDLE,
@@ -20,6 +26,13 @@ typedef enum {
     GAME_OVER
 } GameState;
 
+typedef enum {
+    SLOW,
+    MEDIUM,
+    FAST
+} GameSpeed;
+
+GameSpeed game_speed = SLOW;
 GameState game_status = IDLE;
 
 /***
@@ -62,17 +75,17 @@ GameState game_status = IDLE;
  * 
  */
 
-int spawn_mole() {
+void spawn_mole() {
     int random = rand() % 5;
 
     active_mole = moles[random];
     active_lit = lights[random];
+    indicy_of_mole = random;
 
     gpio_put(active_lit, 1); //turn on
 
-    return active_mole;
+    //return active_mole;
 }
-
 
 
 int main() {
@@ -83,10 +96,13 @@ int main() {
     //... 
     //enable_gpio_interrupts()
     init_gpio();
+    init_adc();
+    init_display_timer();
+    init_disp_spi();
 
-    bool start = false;
+    bool start = true; //should make this a button
     game_status = IDLE;
-
+    display_welcome(); //will just have to call here since no idle state
     while (1) {
 
     
@@ -98,30 +114,35 @@ int main() {
                 score = 0;
 
                 start = true;
-
-                spawn_mole;
+                read_adc();
+                spawn_mole();
+                display_time_isr();
             } 
+            display_welcome(); 
             break; 
 
         case PLAYING:
             //spawn_mole()
 
             if(hit) {
-                if (active_mole == active_lit) {
+                if (active_mole == pressed_mole) {
                     score++;
                     //probably call update spi
+                    display_score_isr();
                 }
                 else {
                     //call the wrong sound
                 }
 
                 gpio_put(active_lit, 0);
+                spawn_mole(); //reset the cycle
+                hit = false;
             }
             
             if (time_left <= 0) {
                 game_status = GAME_OVER;
             }
-
+            break;
         case GAME_OVER:
             if (score > highscore) {
                 highscore = score;
@@ -131,6 +152,7 @@ int main() {
 
             start = false;
             game_status = IDLE;
+            display_game_over();
 
             break;
         }
