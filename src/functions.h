@@ -6,7 +6,7 @@
 #include "hardware/adc.h"
 
 void init_gpio();
-void gpio_callback(uint, uint32_t);
+void gpio_callback();
 
 #include <stdio.h>
 #include <math.h>
