@@ -4,9 +4,14 @@
 
 #include "functions.h"
 
-const int SPI_DISP_SCK = 26; 
-const int SPI_DISP_CSn = 25;
-const int SPI_DISP_TX = 27;
+// current lcd to pin, 4 to 33 sck, 5 to 35 tx, 6 to 34 csn
+// const int SPI_DISP_SCK = 26; 
+// const int SPI_DISP_CSn = 25;
+// const int SPI_DISP_TX = 27; 
+const int SPI_DISP_SCK = 34; // 4 to 34 sck
+const int SPI_DISP_CSn = 35; // 5 to 35 tx
+const int SPI_DISP_TX = 37; // 6 to 37 csn
+// spi0
 const int ADC_CH5 = 45; 
 int score = 0;
 int time_left = 30;
@@ -173,7 +178,7 @@ void cd_init() {
 
     //Perform function set command: 8-bit interface, 2 line display mode, 11 dots per char
     uint16_t value = 0xF << 2;
-    send_spi_cmd(spi1, value);
+    send_spi_cmd(spi0, value);
     // Page 16 of LCD datasheet
     // 0 0 1 DL N F - - = 001111XX = 0xF << 2
     // DL high for 8-bit bus mode
@@ -185,7 +190,7 @@ void cd_init() {
 
     // Perform display on/off command: turn on display, turn off cursor, turn off cursor blink
     value = 0xC;
-    send_spi_cmd(spi1, value);
+    send_spi_cmd(spi0, value);
     // Page 15 of LCD datasheet
     // 0 0 0 0 1 D C B = 00001100 = 0xC
     // D high for display  on
@@ -197,7 +202,7 @@ void cd_init() {
 
     // Perform clear display commmand
     value = 1; 
-    send_spi_cmd(spi1, value);
+    send_spi_cmd(spi0, value);
     // Page 15 of LCD datasheet
     // 00000001
     // Clears display data by writing 20H to all DDRAM address, set DDRAM 
@@ -209,7 +214,7 @@ void cd_init() {
     // Perform entry mode set command
     // Move cursor to the right and increment DDRAM address by 1 (don't shift display)
     value = 0x6; 
-    send_spi_cmd(spi1, value);
+    send_spi_cmd(spi0, value);
     // Datasheet page 15
     // 0 0 0 0 0 1 I/D SH = 00000110 = 0x6
     // I/D high for cursor moves to right, DDRAM address increased by 1
@@ -225,8 +230,8 @@ void init_disp_spi()
     {
         gpio_set_function(pin, GPIO_FUNC_SPI); // GPIO_FUNC_SPI = 1
     }
-    spi_init(spi1, 10000);
-    spi_set_format(spi1, 9, 0, 0, SPI_MSB_FIRST);
+    spi_init(spi0, 10000);
+    spi_set_format(spi0, 9, 0, 0, SPI_MSB_FIRST);
 
     init_display_timer();
     cd_init();
@@ -279,7 +284,7 @@ void display_score_isr()
 void cd_display1(char *str) {
     // Send command to move cursor to first line (starts at address 00H)
     uint16_t value = (0x80) | (0x00);
-    send_spi_cmd(spi1, value);
+    send_spi_cmd(spi0, value);
     // Datasheet page 16/17
     // DDRAM controls cursor position
     // 1 AC6 AC5 AC4 AC3 AC2 AC1 AC0 = 0x80 | AC
@@ -288,7 +293,7 @@ void cd_display1(char *str) {
     // Send each character (16) in str to the display using send_spi_data
     for(int let = 0; let < 16; let++)
     {
-        send_spi_data(spi1, str[let]);
+        send_spi_data(spi0, str[let]);
     }
 }
 
@@ -296,7 +301,7 @@ void cd_display1(char *str) {
 void cd_display2(char *str) {
     // Send command to move cursor to second line (starts at address 40H)
     uint16_t value = (0x80) | (0x40); 
-    send_spi_cmd(spi1, value);
+    send_spi_cmd(spi0, value);
     // Datasheet page 16/17
     // DDRAM controls cursor position
     // 1 AC6 AC5 AC4 AC3 AC2 AC1 AC0 = 0x80 | AC
@@ -305,6 +310,6 @@ void cd_display2(char *str) {
     // Send each character (16) in str to the display using send_spi_data
     for(int let = 0; let < 16; let++)
     {
-        send_spi_data(spi1, str[let]);
+        send_spi_data(spi0, str[let]);
     }
 }

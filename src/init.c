@@ -23,11 +23,15 @@ void init_gpio() {
         gpio_set_dir(moles[i], GPIO_IN);
         gpio_pull_up(moles[i]);
 
-        gpio_set_irq_enabled_with_callback(
-            moles[i], GPIO_IRQ_EDGE_RISE, true, &gpio_callback
-        );
     }
 
+    irq_set_enabled(IO_IRQ_BANK0, true);
+    irq_set_enabled(GPIO_IRQ_EDGE_RISE, true);
+
+    for (int i = 0; i < 5; i++) {
+        gpio_set_irq_enabled(moles[i], GPIO_IRQ_EDGE_RISE, true);
+        gpio_add_raw_irq_handler_masked((1u << moles[i]), gpio_callback);
+    }
 
     for(int i = 0; i < 5; i++) {
         gpio_init(lights[i]);
