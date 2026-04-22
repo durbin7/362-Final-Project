@@ -10,9 +10,15 @@ int pressed_mole;
 bool hit;
 
 void gpio_callback(uint gpio, uint32_t events) { //tell us what button is pressed
-    if (events & GPIO_IRQ_EDGE_RISE) {
-        pressed_mole = gpio;
-        hit = true;
+    for(int i = 0; i < 5; i++)
+    {
+        if(gpio_get_irq_event_mask(moles[i]) & GPIO_IRQ_EDGE_RISE)
+        {
+            // Acknowledge event
+            gpio_acknowledge_irq(moles[i], GPIO_IRQ_EDGE_RISE);
+
+            pressed_mole = moles[i];
+            hit = true;
     }
 }
 
