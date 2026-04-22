@@ -83,7 +83,7 @@ void spawn_mole() {
     indicy_of_mole = random;
 
     gpio_put(active_lit, 1); //turn on
-
+    printf("mole spawned: at %d\n", lights[random]);
     //return active_mole;
 }
 
