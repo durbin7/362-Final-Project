@@ -2,11 +2,19 @@
 #include "pico/stdlib.h"
 #include "hardware/xosc.h"
 #include "pico/multicore.h"
+#include "functions.h"
 
-int moles[] = {1,2,3,4,5};
-int lights[] = {1,2,3,4,5};
+int moles[] = {3,5,7,9,11};
+int lights[] = {4,6,8,10,12};
 int pressed_mole;
 bool hit;
+
+void gpio_callback(uint gpio, uint32_t events) { //tell us what button is pressed
+    if (events & GPIO_IRQ_EDGE_RISE) {
+        pressed_mole = gpio;
+        hit = true;
+    }
+}
 
 void init_gpio() {
 
@@ -26,12 +34,7 @@ void init_gpio() {
     }
 }
 
-void gpio_callback(uint gpio, uint32_t events) { //tell us what button is pressed
-    if (events & GPIO_IRQ_EDGE_RISE) {
-        pressed_mole = gpio;
-        hit = true;
-    }
-}
+
 
 
 

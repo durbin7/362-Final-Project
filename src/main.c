@@ -11,7 +11,7 @@ int active_lit;
 
 extern int moles[];
 extern int lights[];
-extern int active_mole;
+int active_mole;
 extern bool hit;
 extern int pressed_mole;
 

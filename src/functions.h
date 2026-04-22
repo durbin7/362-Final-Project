@@ -26,7 +26,7 @@ void keypad_init_pins();
 void keypad_init_timer();
 void init_wavetable(void);
 void set_freq(int chan, float f);
-extern KeyEvents kev;
+//extern KeyEvents kev;
 void drum_machine();
 
 void init_disp_spi(); // Initializes display, score, and time. Call at beginning.

@@ -1,11 +1,10 @@
-//good luck on teh
+/* //good luck on teh
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
 #include "pico/stdlib.h"
 #include "hardware/pwm.h"
-#include "queue.h"
-#include "support.h"
+
 
 static int duty_cycle = 0;
 static int dir = 0;
@@ -161,4 +160,4 @@ pwm_set_chan_level(slice_num0,0,0);
   
 }
 //in main, call init_pwm_audio and call 'set_freq' with float value ___ to get freq of ___
-//if button pushed on time, set freq to __, if button pushed when led not on set freq to __
+//if button pushed on time, set freq to __, if button pushed when led not on set freq to __ */
