@@ -39,7 +39,7 @@ void display_time_isr(); // Updates time on display. Call when first start game.
 void display_game_over(); // Call if press incorrect or not in time
 void display_game_over();
 void cd_init();
-void cd_display1(const char *str);
-void cd_display2(const char *str);
+void cd_display1(char *str);
+void cd_display2(char *str);
 void send_spi_cmd(spi_inst_t* spi, uint16_t value);
 void send_spi_data(spi_inst_t* spi, uint16_t value);

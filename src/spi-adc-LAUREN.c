@@ -234,15 +234,15 @@ void init_disp_spi()
 
 void display_welcome()
 {
-    const char *str1 = "Push button to start";
+    char *str1 = "Push button to start";
     cd_display1(str1);
-    const char *str2 = "High Score: %d", highscore;
+    char *str2 = "High Score: %d", highscore;
     cd_display2(str2);
 }
 
 void display_time_isr()
 {
-    const char *str = "Time left: %d s", time_left;
+    char *str = "Time left: %d s", time_left;
     cd_display1(str);
 
     // If time_left = 0, update GameState to GAME_OVER
@@ -263,20 +263,20 @@ void display_time_isr()
 
 void display_game_over()
 {
-    const char *str1 = "Game Over!";
+    char *str1 = "Game Over!";
     cd_display1(str1);
-    const char *str2 = "Final Score: %d", score;
+    char *str2 = "Final Score: %d", score;
     cd_display2(str2);
 }
 
 void display_score_isr()
 {
-    const char *str = "Your score: %d", score;
+    char *str = "Your score: %d", score;
     cd_display1(str);
 }
 
 // First line display of LCD
-void cd_display1(const char *str) {
+void cd_display1(char *str) {
     // Send command to move cursor to first line (starts at address 00H)
     uint16_t value = (0x80) | (0x00);
     send_spi_cmd(spi1, value);
@@ -293,7 +293,7 @@ void cd_display1(const char *str) {
 }
 
 // Second line display of LCD
-void cd_display2(const char *str) {
+void cd_display2(char *str) {
     // Send command to move cursor to second line (starts at address 40H)
     uint16_t value = (0x80) | (0x40); 
     send_spi_cmd(spi1, value);
