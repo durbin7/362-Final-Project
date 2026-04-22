@@ -21,7 +21,11 @@ void set_freq(int chan, float f);
 extern KeyEvents kev;
 void drum_machine();
 
-1. 
+//Ab is bad  415.3 Hz
+//B is good 494 hz
+uint32_t step0 = (494 * 1024 / 22050) << 16; //b
+uint32_t step1 = (415 * 1024/ 22050) << 16;  //ab or aflat/gfla
+
 
 void init_pwm_static () //implementing static duty cycle pwm signal
 {
@@ -84,10 +88,6 @@ void play_sound ()
 
 }
 
-//Ab is bad  415.3 Hz
-//B is good 494 hz
-
-
 
 
 void pwm_audio_handler() {
@@ -97,18 +97,16 @@ void pwm_audio_handler() {
      pwm_clear_irq(slice_num0); //ack
      offset0 +=step0;
      offset1 += step1;
-     if(offset0 >= (N<<16))
-     {
-        offset0 -= (N<<16);
-     }
-     if(offset1 >= (N<<16))
-     {
-        offset1 -= (N<<16);
-     }
-     int samp = wavetable[offset0 >> 16] + wavetable[ offset1 >> 16];
-     samp = samp/2;
     
-     samp = samp *49 / 32768;
+     
+    //  int samp = wavetable[offset0 >> 16] + wavetable[ offset1 >> 16];
+     
+     int samp = (wavetable[(offset0 >> 16) % 1024] + wavetable[ (offset1 >> 16) % 1024]) /2;
+    uint32_t unsignedsamp = samp +32768;
+    uint32_t top = pwm_hw->slice[slice_num0].top;
+
+    uint32_t level;
+    level = (unsignedsamp * top) / 65536;
     pwm_set_chan_level(slice_num0,0,samp);
 
 }
@@ -125,6 +123,7 @@ void init_pwm_audio() {
     pwm_set_wrap(slice_num0,1000000/RATE -1); //1079 //results in 20khz frequency
     duty_cycle =0;
     init_wavetable();
+    pwm_clear_irq(slice_num0);
 
 
     irq_set_enabled(PWM_IRQ_WRAP_0, true);
