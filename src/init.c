@@ -11,7 +11,7 @@ volatile bool hit;
 
 void gpio_callback() { //tell us what button is pressed
     printf("button pressed");
-    hit = true;
+    
     for(int i = 0; i < 5; i++)
     {
         if(gpio_get_irq_event_mask(moles[i]) & GPIO_IRQ_EDGE_RISE) //might need to get rid of edge rise
@@ -19,6 +19,7 @@ void gpio_callback() { //tell us what button is pressed
             // Acknowledge event
             gpio_acknowledge_irq(moles[i], GPIO_IRQ_EDGE_RISE);
             pressed_mole = moles[i];
+            hit = true;
         } 
     }
 }
