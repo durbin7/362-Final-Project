@@ -76,7 +76,7 @@ extern GameState game_status;
  */
 
 void spawn_mole() {
-    srand(time(NULL));
+    
     int random = rand() % 5;
 
     active_mole = moles[random];
@@ -101,7 +101,7 @@ int main() {
     init_adc();
     init_display_timer();
     init_disp_spi();
-
+    srand(time(NULL));
     bool start = true; //should make this a buttonb                   b                                                                                                                       bbv 
     game_status = IDLE;
 
