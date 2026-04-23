@@ -101,12 +101,12 @@ int main() {
     init_adc();
     init_display_timer();
     init_disp_spi();
-    srand(time(NULL));
+    //srand(time(NULL));
     bool start = true; //should make this a buttonb                   b                                                                                                                       bbv 
     game_status = IDLE;
 
     for (int i = 4; i <= 12; i+=2) {
-        gpio_put(i, 0);
+        gpio_put(i, 1);
     }
 
     //display_welcome(); //will just have to call here since no idle state

@@ -37,10 +37,10 @@ void init_gpio() {
 
     
     //irq_set_enabled(GPIO_IRQ_EDGE_RISE, true);
-    //gpio_set_irq_callback(&gpio_callback);
+    
     uint32_t mask = 1u << 3 | 1u << 5 | 1u << 7 | 1u << 9 | 1u << 11;
-    gpio_add_raw_irq_handler_masked(mask, gpio_callback);
-
+    //gpio_add_raw_irq_handler_masked(mask, gpio_callback);
+    gpio_set_irq_callback(&gpio_callback);
     irq_set_enabled(IO_IRQ_BANK0, true);
 
     
