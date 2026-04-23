@@ -2,9 +2,9 @@
 #include <stdbool.h>
 #include <functions.h>
 
-extern score;
-extern time_left;
-extern highscore;
+extern int score;
+extern int time_left;
+extern int highscore;
 int interval_between_moles = 500; //this is in ms
 int indicy_of_mole;
 int active_lit;
