@@ -23,29 +23,23 @@ void gpio_callback() { //tell us what button is pressed
 }
 
 void init_gpio() {
-
+    // 1. Init input pins
     for(int i = 0; i < 5; i++) {
-        gpio_init(moles[i]); //set moles as inputs
+        gpio_init(moles[i]);
         gpio_set_dir(moles[i], GPIO_IN);
         gpio_pull_up(moles[i]);
-
-    }
-    for (int i = 0; i < 5; i++) {
-        gpio_set_irq_enabled(moles[i], GPIO_IRQ_EDGE_RISE, true);
-        //gpio_add_raw_irq_handler_masked((1u << moles[i]), gpio_callback);
     }
 
-    
-    //irq_set_enabled(GPIO_IRQ_EDGE_RISE, true);
-    
-    uint32_t mask = 1u << 3 | 1u << 5 | 1u << 7 | 1u << 9 | 1u << 11;
-    //gpio_add_raw_irq_handler_masked(mask, gpio_callback);
+    // 2. Register handler FIRST
     gpio_set_irq_callback(&gpio_callback);
     irq_set_enabled(IO_IRQ_BANK0, true);
 
-    
+    // 3. Then enable per-pin IRQs
+    for (int i = 0; i < 5; i++) {
+        gpio_set_irq_enabled(moles[i], GPIO_IRQ_EDGE_RISE, true);
+    }
 
-
+    // 4. Init output pins
     for(int i = 0; i < 5; i++) {
         gpio_init(lights[i]);
         gpio_set_dir(lights[i], GPIO_OUT);

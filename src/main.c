@@ -91,6 +91,7 @@ void spawn_mole() {
 
 
 int main() {
+    stdio_init_all();
     printf("In main()\n");
     //init_gpio();
     //init_timers();
@@ -106,7 +107,7 @@ int main() {
     game_status = IDLE;
 
     for (int i = 4; i <= 12; i+=2) {
-        gpio_put(i, 1);
+        gpio_put(i, 0);
     }
 
     //display_welcome(); //will just have to call here since no idle state
