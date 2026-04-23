@@ -24,6 +24,15 @@ void gpio_callback() { //tell us what button is pressed
     }
 }
 
+void gpio_choke() {
+    for( int i = 0; i < 5; i ++) {
+        if gpio_get(moles[i] == 0) {
+            pressed_mole = moles[i];
+            hit = true;
+        }
+    }
+}
+
 void init_gpio() {
     // 1. Init input pins
     for(int i = 0; i < 5; i++) {
@@ -34,7 +43,7 @@ void init_gpio() {
 
     // 2. Register handler FIRST
     gpio_set_irq_callback(&gpio_callback);
-    irq_set_enabled(IO_IRQ_BANK0, true);
+    irq_set_enabled(IO_IRQ_BANK0, true);    
 
     // 3. Then enable per-pin IRQs
     for (int i = 0; i < 5; i++) {

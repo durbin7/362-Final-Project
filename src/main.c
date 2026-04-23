@@ -87,7 +87,14 @@ void spawn_mole() {
     printf("mole spawned: at %d\n", lights[random]);
     //return active_mole;
 }
-
+void gpio_choke() {
+    for( int i = 0; i < 5; i ++) {
+        if gpio_get(moles[i] == 0) {
+            pressed_mole = moles[i];
+            hit = true;
+        }
+    }
+}
 
 
 int main() {
